@@ -1,0 +1,34 @@
+# EC2 Instance Terraform Module
+
+Terraform module to securely deploy an EC2 instance inside a VPC.
+
+## 📦 Features
+
+- Deploy EC2 instances into public or private subnets
+- SSH access restricted to specific CIDR ranges
+- No public IP on private instances by default
+- Full tagging support
+- Exposes useful outputs like instance ID and IP
+
+## 🔧 Usage Example
+
+```hcl
+module "ec2_instance" {
+  source = "../modules/ec2-instance"
+
+  ami_id               = "ami-0123456789abcdef0"
+  instance_type        = "t3.micro"
+  subnet_id            = module.vpc.public_subnet_ids[0]
+  vpc_id               = module.vpc.vpc_id
+  key_name             = "my-ssh-key"
+  instance_name        = "secure-instance"
+  associate_public_ip  = true
+  ssh_allowed_cidrs    = ["203.0.113.0/24"]
+
+  tags = {
+    Environment = "dev"
+    Terraform   = "true"
+  }
+}
+
+This project is licensed under the MIT License.
